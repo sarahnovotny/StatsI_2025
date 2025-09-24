@@ -106,7 +106,7 @@ se_edu
 # Histogram of income with mean line
 ggplot(df, aes(x = income)) +
   geom_histogram(binwidth = 250, fill = "steelblue", color = "white") +
-  geom_vline(xintercept = mean_income, color = "red", linetype = "dashed", size = 1) +
+  geom_vline(xintercept = mean_income, color = "red", linetype = "dashed", linewidth = 1) +
   labs(title = "Distribution of Monthly Net Income",
        x = "Monthly Net Income (Euro)", y = "Count") +
   theme_minimal()
@@ -114,7 +114,7 @@ ggplot(df, aes(x = income)) +
 # Histogram of education with mean line
 ggplot(df, aes(x = edu)) +
   geom_histogram(binwidth = 1, fill = "darkgreen", color = "white") +
-  geom_vline(xintercept = mean_edu, color = "red", linetype = "dashed", size = 1) +
+  geom_vline(xintercept = mean_edu, color = "red", linetype = "dashed", linewidth = 1) +
   labs(title = "Distribution of Education (Years)",
        x = "Years of Education", y = "Count") +
   theme_minimal()
