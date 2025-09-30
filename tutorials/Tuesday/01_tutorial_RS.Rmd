@@ -19,7 +19,13 @@ RQ: Is there a relationship between education and income?
 
 Import the data and describe it. Include below a brief written interpretation. 
 
+#load data
 ```{r}
+getwd()
+here()
+here("datasets", "fictional_data.csv")
+df <- read.csv(here("datasets", "fictional_data.csv"))
+              
 
 ```
 
