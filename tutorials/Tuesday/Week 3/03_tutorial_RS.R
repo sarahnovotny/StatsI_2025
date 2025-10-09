@@ -1,12 +1,12 @@
 # Applied Statistical Analysis I      
-# Tutorial 2: Hypothesis testing, experiments, difference in means                       
+# Tutorial 3: Hypothesis testing, experiments, difference in means                       
 
 # Get working directory
 getwd()
 
 # Set working directory 
-setwd("/Users/redmondscales/Documents/Applied Stats/GitHub/StatsI_2025")
-getwd()
+#setwd("/Users/redmondscales/Documents/Applied Stats/GitHub/StatsI_2025")
+#getwd()
 
 # Agenda
 # (a.) Descriptive analysis
@@ -19,6 +19,7 @@ getwd()
 
 # Load data 
 
+df <- read.csv("datasets/fictional_data.csv")
 
 # Selection of variables
 # Education: University level education in years
@@ -28,10 +29,17 @@ getwd()
 ### (a.) Descriptive analysis ----------
 
 # First step, look at data
-
-
+View(df)
+str(df)
+#?str
+head(df)
 
 # Step by step
+
+mean(df$income) #mean
+var(df$income) #variance
+sd(df$income) #std deviation
+sd(df$income)/sqrt(length(df$income)) #std error.
 
 # Get summary statistics for entire dataset
 

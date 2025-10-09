@@ -60,6 +60,7 @@ plot(density(df$income),
 # based on the sample data?
 mean(df$income) # Sample mean is estimate for population mean
 sd(df$income)/sqrt(length(df$income)) 
+
 # Standard **error** (Sample standard deviation adjusted by sample size)
 # is estimate for standard deviation of the sampling distribution
 

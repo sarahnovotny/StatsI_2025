@@ -9,7 +9,7 @@ setwd("/Users/redmondscales/Documents/Applied Stats/GitHub")
 getwd()
 
 # Agenda
-# (a.) Contingency tables
+# (a.) Contingency tablesget
 # (b.) Chi-square test
 # (c.) Correlation
 # (d.) Bivariate regression 
