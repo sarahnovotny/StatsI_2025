@@ -10,6 +10,7 @@ getwd()
 
 # Agenda
 # (a.) Contingency tablesget
+
 # (b.) Chi-square test
 # (c.) Correlation
 # (d.) Bivariate regression 
