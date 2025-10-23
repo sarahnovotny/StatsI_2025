@@ -161,27 +161,30 @@ Chattopadhyay and Duflo were interested in whether women promote different polic
 	\item [(a)] State a null and alternative (two-tailed) hypothesis. 
 	\vspace{.5cm}
 	\begin{itemize}
-	\item H0 - the average number of water projects remains the same  regardless of whether or not there were reserved seats for women leaders.
+	\item H0 - the proportion of water to irrigation repair remains the same  regardless of whether or not there were reserved seats for women leaders.
 
-	\item H$\alpha$ - the average number of water projects increases where there are reserved seats for women leaders.
+	\item H$\alpha$ - the proportion of water to irrigation repair increases where there are reserved seats for women leaders.
     \end{itemize}
 
 	\vspace{.5cm}
 	\item [(b)] Run a bivariate regression to test this hypothesis in \texttt{R} (include your code!).
 	\vspace*{.5cm}
-		\lstinputlisting[language=R, firstline=178, lastline=178]{PS02_answers_SN.R} 
-	\lstinputlisting[language=R, firstline=188, lastline=197]{PS02_answers_SN.R} 
+	\lstinputlisting[language=R, firstline=200, lastline=220]{PS02_answers_SN.R} 
 	\vspace*{.5cm}
 	
-	\input{./regression_output_reserved_water.tex}
-
+	\input{./regression_output_irrigation_water.tex}
+	\input{./regression_output_irrigation_water_female.tex}
+	\input{./regression_output_irrigation_water_male.tex}
+	
+		\begin{figure}[H]\centering
+		\caption{\footnotesize Relationships between \emph{Irrigation Projects} and \emph{Water Projects} with \emph{Gender} by color.}
+		\label{}
+		
+		\includegraphics[width=.75\textwidth]{./irrigation_vs_water_colored.pdf}
+	\end{figure}
 	
 	\vspace{.5cm}
 	\item [(c)] Interpret the coefficient estimate for reservation policy. 
-	
-	\vspace{.5cm}
-	
-	The  $\beta$ coefficient estimate of 9.25 tells us that on average, villages with reserved seats had substantially (~9x) more water based projects undertaken.  
 \end{enumerate}
 
 

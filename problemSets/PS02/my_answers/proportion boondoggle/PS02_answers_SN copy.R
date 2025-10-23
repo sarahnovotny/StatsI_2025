@@ -176,17 +176,10 @@ x$stdres
 
 ?read.csv2
 west_bengal_chatt_duflo_data <- read.csv(url("https://raw.githubusercontent.com/kosukeimai/qss/master/PREDICTION/women.csv") )
-
-# (a) State a null and alternative (two-tailed) hypothesis.
-
-# H0 - the average number of water projects remains the same 
-# regardless of whether or not there were reserved seats
-# Ha - the avereage number of water projects increases where 
-# there are reserved seats for women 
-
-# (b) Run a bivariate regression to test this hypothesis in R (include your code!).
-
-regression <- lm(water~reserved,  data=west_bengal_chatt_duflo_data)
+str(west_bengal_chatt_duflo_data)
+west_bengal_chatt_duflo_data$female <- factor(west_bengal_chatt_duflo_data$female)
+west_bengal_chatt_duflo_data_female <- subset(west_bengal_chatt_duflo_data, female ==1)
+west_bengal_chatt_duflo_data_male <- subset(west_bengal_chatt_duflo_data, female ==0)
 
 # function for formatting the regression table
 output_stargazer <- function(outputFile, ...) {
@@ -194,7 +187,37 @@ output_stargazer <- function(outputFile, ...) {
   cat(paste(output, collapse = "\n"), "\n", file=outputFile, append=TRUE)
 }
 
-output_stargazer("./problemSets/PS02/my_answers/regression_output_reserved_water.tex", regression)
+
+# (a) State a null and alternative (two-tailed) hypothesis.
+
+# H0 - the proportion of water to irrigation repair remains the same 
+# regardless of whether or not there were reserved seats
+# Ha - the proportion of water to irrigation repair increases where 
+# there are reserved seats for women 
+
+# (b) Run a bivariate regression to test this hypothesis in R (include your code!).
+
+regression <- lm(water~irrigation,  data=west_bengal_chatt_duflo_data)
+regression_female <- lm(water~irrigation,  data=west_bengal_chatt_duflo_data_female)
+regression_male <- lm(water~irrigation,  data=west_bengal_chatt_duflo_data_male)
+?lm
+output_stargazer("./problemSets/PS02/my_answers/regression_output_irrigation_water.tex", regression)
+output_stargazer("./problemSets/PS02/my_answers/regression_output_irrigation_water_female.tex", regression_female)
+output_stargazer("./problemSets/PS02/my_answers/regression_output_irrigation_water_male.tex", regression_male)
+
+
+
+pdf("./problemSets/PS02/my_answers/irrigation_vs_water_colored.pdf")
+ggplot(data = west_bengal_chatt_duflo_data, aes(x=irrigation,y =water, color=female)) + geom_point() + 
+         scale_color_discrete(labels = c("M", "F")) +
+  labs(
+    x = "New or Repaired Irrigation Facilities", 
+    y = "New or Repaired Water Facilities", 
+    colour = "Gender",
+    title = "New or Repaired Irrigation Facilities vs. Water Facilities ",
+    subtitle = "Colored by Leader's Gender"
+  )
+dev.off()
 
 
 # (c) Interpret the coefficient estimate for reservation policy.
