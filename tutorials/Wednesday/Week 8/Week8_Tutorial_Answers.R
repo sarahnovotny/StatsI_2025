@@ -1,6 +1,6 @@
 ###############################################################################
 # Title:        Stats I - Week 8
-# Description:  Multiple regression
+# Description:  Multiple regression - Answers
 # Author:       Elena Karagianni
 # R version:    R 4.4.0
 ###############################################################################
@@ -50,12 +50,12 @@ setwd("/Users/elkarag/Desktop/Teaching/Applied Stats I/Week 8")
 # https://medium.com/geekculture/a-beginners-guide-to-apis-9aa7b1b2e172
 
 # Load data from World Bank API
-wb <- wb(country=c("AF","BRA","ITA","NGA","SWE","UGA"), 
+wb <- wb_data(country=c("AF","BRA","ITA","NGA","SWE","UGA"), 
          indicator=c("NY.GDP.PCAP.CD", # GDP per capita (current US$)
                      "SP.POP.TOTL", # Population, total 
                      "SE.SEC.ENRR", #  School enrollment, secondary (% gross) 
                      "SH.DYN.MORT"), # Mortality rate, under-5 (per 1,000 live births) 
-         startdate = 2000, enddate = 2020)
+         start_date = 2000, end_date = 2020)
 
 # Data formats--wide and long
 # https://www.statology.org/long-vs-wide-data/
@@ -70,17 +70,16 @@ wb <- wb(country=c("AF","BRA","ITA","NGA","SWE","UGA"),
 #                  idvar = c("country","date","iso3c"),
 #                  direction = "wide")
 
+# Some quick data-wrangling to match the rest of the code later
+wb <- wb %>% select(-iso2c)
+wb <- wb %>% select(date, country, iso3c, NY.GDP.PCAP.CD,
+                    SP.POP.TOTL,SE.SEC.ENRR,SH.DYN.MORT)
 
 # Load Quality of Government data
 qog <- read_csv("https://www.qogdata.pol.gu.se/data/qog_bas_ts_jan23.csv")
 
 # How can we combine data from different sources?
 # https://guides.nyu.edu/quant/merge
-
-# Some quick data-wrangling to match the rest of the code later
-wb <- wb %>% select(-iso2c)
-wb <- wb %>% select(date, country, iso3c, NY.GDP.PCAP.CD,
-                    SP.POP.TOTL,SE.SEC.ENRR,SH.DYN.MORT)
 
 # Merge 
 df <- merge(wb, # Left df
@@ -107,7 +106,12 @@ write.csv(df, "df_income_mortality.csv")
 # the Quality of Government dataset. 
 # Alternatively, add a variable from a new data source. 
 
-
+# Load zipped data from url
+temp <- tempfile(fileext = ".zip") # Initiate temporary file
+# Download zip as temporary file
+download.file("https://ucdp.uu.se/downloads/ged/ged231-csv.zip", temp, mode="wb")
+ucdp <- read_csv(temp) # Read data
+View(ucdp)
 
 # Load some data that you find interesting. 
 # What is the level of analysis? 
@@ -128,6 +132,46 @@ write.csv(df, "df_income_mortality.csv")
 
 # How can we merge data on different levels of analysis?
 # What is the level of analysis?
+
+View(ucdp)
+View(df)
+
+# How to aggregate data?
+# Which variables do we need?
+ucdp[,c("country", "year", "best")] 
+
+# best = the best (most likely) estimate of total fatalities integer 
+# resulting from an event
+
+# Aggregate ucdp from event to the country-year level. 
+ucdp_agg <- aggregate(ucdp$best, # Variable to aggregate
+                      list(ucdp$country, ucdp$year), # Group variables
+                      FUN=sum) # How to aggregate, sum
+head(ucdp_agg)
+
+# Merge 
+df <- merge(df, # Left df
+            ucdp_agg, # Right df
+            by.x=c("date","country"), # merge variables in left
+            by.y=c("Group.2","Group.1"), # merge variables in right
+            all.x=TRUE, # merge operation, only keep left
+            sort=FALSE) # Do not sort observations
+
+# Rename column
+names(df)[9] <- "best"
+View(df)
+
+# Why do we see missing values?
+# Missing values mean that country-year was not in UCDP data, 
+# so there were no fatalities. 
+# We can replace with 0s. 
+df$best[is.na(df$best)] = 0
+
+# Step by step
+df$best # Select variable
+is.na(df$best) # Check if value is na
+df$best[is.na(df$best)] # Subset rows which are na
+df$best[is.na(df$best)] = 0 # Replace with 0
 
 # (b.) Data wrangling -------
 
@@ -228,14 +272,33 @@ df <- df[complete.cases(df), ]
 
 # Exercise B -----------------
 
-# 1. Get the mean income for democracies and autocracies. 
+# Get the mean income for democracies and autocracies. 
 
+# Base R
+mean(df_na[df_na$democracy==0,]$gdp_per_cap)
+mean(df_na[df_na$democracy==1,]$gdp_per_cap)
 
+# Step by step:
+df_na[df_na$democracy==0,] # Subset rows
+df_na[df_na$democracy==0,]$gdp_per_cap # Subset columns 
+mean(df_na[df_na$democracy==0,]$gdp_per_cap) # Calculate mean
 
-# 2. Get the mean income for Afghanistan. 
+# Tidyverse:
+df_grouped <- df_na %>%
+  group_by(democracy) %>%
+  summarize(mean_inc = mean(mean(gdp_per_cap)))
 
+# Get the mean income for Afghanistan. 
 
-# 3. Create a variable, which measures the t-1 lag of GDP per capita.
+# Base R
+mean(df_na[df_na$country=="Afghanistan",]$gdp_per_cap)
+
+# Tidyverse: 
+df_sub <- df_na %>% 
+  filter(country == "Afghanistan") %>%
+  summarise(mean = mean(gdp_per_cap))
+
+# Create a variable, which measures the t-1 lag of GDP per capita.
 
 # What is a lagged variable?
 # "A lagged value of a variable is the value of the variable 
@@ -244,10 +307,30 @@ df <- df[complete.cases(df), ]
 # as being from time t−1" (Kellstedt and Whitten 2018, p.257).
 
 # Group data, lagged variable needs to be country specific
+df_na_g <- arrange(df_na, country, date) # Important, sort rows beforehand!
+df_na_g <- group_by(df_na_g, country) # Group by country
+df_na <- mutate(df_na_g, 
+                income_lag = lag(gdp_per_cap, n = 1)) # Calculate t-1 lag
 
+# Use piping
+df_na <- 
+  df_na %>%
+  arrange(country, date)  %>%
+  group_by(country) %>%
+  mutate(income_lag = lag(gdp_per_cap, n = 1))
 
-# 4. Create a variable, which measure regime change. 
+# Create a variable, which measure regime change. 
 
+# Step 1: Create 'help' variable, lagged regime type
+View(df_na) # Make sure data is sorted
+df_na_g <- group_by(df_na, country) # Group data by country
+df_na <- mutate(df_na_g, 
+                democracy_lag = lag(democracy, n = 1)) # Calculate t-1 lag
+
+# Step 2: Recode
+df_na$regime_change <- 0 # Create empty variable
+# Replace with 1 if current regime type is the same as t-1 regime type
+df_na$regime_change[df_na$democracy_lag!=df_na$democracy] <- 1 
 
 # (c.) Descriptive analysis -------
 
@@ -335,16 +418,46 @@ ggsave(scatter, file = "scatter.png")
 
 # Exercise C -----------------
 
-# 1. Add a regression line to your scatter plot. 
+# Add a regression line to your scatter plot. 
 
+# Scatter plot
+scatter <-
+  ggplot(df_na, aes(x = log(gdp_per_cap), y = mort)) + 
+  geom_point() +
+  geom_smooth(method='lm',col="black") # Add regression line
+scatter
 
-
-# 2. Create a new "scatter plot", which differentiates between
+# Create a new "scatter plot", which differentiates between
 # democracies and autocracies. Add the regression lines. 
 
 # Scatter plot
+scatter <-
+  ggplot(df_na, aes(x = factor(democracy), # Over regime type
+                    y = mort,
+                    col = factor(democracy))) + 
+  geom_point() 
+scatter 
 
+# Access regression coefficients
+model <- lm(mort ~ democracy, data=df_na)
+summary(model)
+model$coefficients
+model$coefficients[1]
 
+# Add regression lines
+scatter <-
+  ggplot(df_na, aes(x = factor(democracy), # Over regime type
+                    y = mort, 
+                    col = factor(democracy))) + 
+  geom_point() +
+  geom_hline(yintercept=model$coefficients[1],col="red") + # Autocracies
+  geom_hline(yintercept=model$coefficients[1]+model$coefficients[2],col="turquoise") # Democracies
+scatter
+
+# Equal to the mean differentiated by regime type
+mean(df_na[df_na$democracy==0,]$mort)
+mean(df_na[df_na$democracy==1,]$mort)
+model$coefficients[1]+model$coefficients[2]
 
 # (d.) Regression analysis -----
 
@@ -372,11 +485,54 @@ summary(model3)
 # What is you research question? How would you present
 # your results?
 
+# What is the relationship between income and armed conflict?
+model4 <- lm(best~gdp_per_cap, data=df_na)
+summary(model4)
+
+model5 <- lm(best~gdp_per_cap_1000, data=df_na)
+summary(model5)
 
 # Export regression table
+stargazer(model5)
 
+# More arguments for the latex output
+stargazer(model5, 
+          type = "latex",
+          title = "Table of Coefficients",
+          column.labels = "Model 5",
+          covariate.labels = "GDP per capita",
+          dep.var.labels = "Mortality")
 
-
-# Plot your model
 # Scatter plot
+scatter <- ggplot(df_na, aes(x = gdp_per_cap_1000, y = best)) +
+  geom_point(alpha = 0.6, color = "#2c7bb6", size = 2.5) +  
+  geom_smooth(method = "lm", color = "black", linewidth = 0.8, se = T) +  
+  labs(x = "GDP per capita (thousands)", 
+       y = "Best estimate of battle deaths") +  
+  theme_minimal()
+scatter
 
+# Example from class:
+# To explain how the second covariate relates to the residuals 
+# (from tutorial slides):
+
+# 1) Regress mort (y) on gdp_per_cap_1000 (x1)
+model_a <- lm(mort ~ gdp_per_cap_1000, data = df_na)
+resid1 <- resid(model_a)
+
+# 2) Regress pop_size (x2) on gdp_per_cap_1000 (x1)
+model_b <- lm(pop_size ~ gdp_per_cap_1000, data = df_na)
+resid2 <- resid(model_b)
+
+# 3) Regress residuals from (1) on residuals from (2)
+model_resid <- lm(resid1 ~ resid2)
+summary(model_resid)
+
+# 4) Full model 
+full_model <- lm(mort ~ gdp_per_cap_1000 + pop_size, data = df_na)
+
+# Compare with the coefficient on pop_size from the full model
+model_resid$coefficients[2]
+full_model$coefficients[3]
+
+# pop_size has the same size. 
