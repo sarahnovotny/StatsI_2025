@@ -40,6 +40,7 @@ inc.sub <- read.csv("https://raw.githubusercontent.com/ASDS-TCD/StatsI_2025/main
 # is difflog.
 
 vote_share_model <-lm(inc.sub$voteshare~inc.sub$difflog)
+summary(vote_share_model)
 
 # 2. Make a scatterplot of the two variables and add the regression line.
 
@@ -70,14 +71,16 @@ vote_share_model_residuals <- vote_share_model$residuals
 # is difflog.
 
 pres_vote_model <-lm(inc.sub$presvote~inc.sub$difflog)
+summary(pres_vote_model)
+
 #
 # 2. Make a scatterplot of the two variables and add the regression line.
 #
 pdf("./presvote_by_difflog.pdf")
 plot(inc.sub$difflog, inc.sub$presvote, 
-  main="Difference in Campaign Spending vs PresVote", 
+  main="Difference in Campaign Spending vs Presidential Vote ", 
   xlab="Difference in Spending", 
-ylab="PresVote")
+ylab="Presidential Vote")
 abline(lm(inc.sub$presvote~inc.sub$difflog),col='blue')
 dev.off()
 
@@ -98,13 +101,15 @@ pres_vote_model_residuals <- pres_vote_model$residuals
 # is presvote.
 
 vote_share_presvote_model <-lm(inc.sub$voteshare~inc.sub$presvote)
+summary(vote_share_model)
+
 #
 # 2. Make a scatterplot of the two variables and add the regression line.
 
 pdf("./voteshare_by_presvote.pdf")
 plot(inc.sub$presvote, inc.sub$voteshare, 
-  main="PresVote vs Incumbant Vote Share", 
-  xlab="PresVote", 
+  main="Presidential Vote vs Incumbant Vote Share", 
+  xlab="Presidential Vote", 
 ylab="Incumbant Vote Share")
 abline(lm(inc.sub$voteshare~inc.sub$presvote),col='blue')
 
@@ -124,6 +129,7 @@ dev.off()
 # explanatory variable is the residuals from Question 2.
 #
 residuals_regression <-lm(vote_share_model_residuals~pres_vote_model_residuals)
+summary(residuals_regression)
 #
 # 2. Make a scatterplot of the two residuals and add the regression line.
 pdf("./presvote_residuals_by_vote_share_residuals.pdf")
@@ -147,6 +153,7 @@ dev.off()
 # explanatory variables are difflog and presvote.
 #
 vote_share_multiV_model <-lm(inc.sub$voteshare~inc.sub$difflog +inc.sub$presvote)
+summary(vote_share_multiV_model)
 #
 # 2. Write the prediction equation.
 #

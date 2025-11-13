@@ -85,9 +85,42 @@
 \noindent We are interested in knowing how the difference in campaign spending between incumbent and challenger affects the incumbent's vote share. 
 	\begin{enumerate}
 		\item Run a regression where the outcome variable is \texttt{voteshare} and the explanatory variable is \texttt{difflog}.	\vspace{5cm}
-		\item Make a scatterplot of the two variables and add the regression line. 	\vspace{7cm}
-		\item Save the residuals of the model in a separate object.	\vspace{7cm}
+		
+			\lstinputlisting[language=R, firstline=42, lastline=43]{PS03_answers_SN.R}  
+			
+				\begin{footnotesize}
+				
+				\begin{verbatim}
+					Coefficients:
+					Estimate Std. Error t value Pr(>|t|)    
+					(Intercept)     0.579031   0.002251  257.19   <2e-16 ***
+					inc.sub$difflog 0.041666   0.000968   43.04   <2e-16 ***
+					---
+					Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+					
+					Residual standard error: 0.07867 on 3191 degrees of freedom
+					Multiple R-squared:  0.3673,	Adjusted R-squared:  0.3671 
+					F-statistic:  1853 on 1 and 3191 DF,  p-value: < 2.2e-16
+				\end{verbatim}
+			\end{footnotesize}
+		
+		\item Make a scatterplot of the two variables and add the regression line. 	\vspace{.5cm}
+			\lstinputlisting[language=R, firstline=48, lastline=55]{PS03_answers_SN.R}  \vspace{.5cm}
+			
+			See Figure 1.
+			\begin{figure}[!h]]\centering
+				
+				\caption{\footnotesize Difference in Campaign Spending vs Incumband Vote Share.}
+				\label{fig:voteshare_by_difflog}
+				\includegraphics[width=.85\textwidth]{voteshare_by_difflog.pdf}
+			\end{figure}
+			
+		\item Save the residuals of the model in a separate object.	\vspace{.5cm}
+					\lstinputlisting[language=R, firstline=60, lastline=60]{PS03_answers_SN.R}  \vspace{.5cm}
 		\item Write the prediction equation.
+		$$
+		Y = 0.579 + 0.041X + 0.079
+		$$
 	\end{enumerate}
 	
 \newpage
@@ -95,10 +128,46 @@
 \section*{Question 2}
 \noindent We are interested in knowing how the difference between incumbent and challenger's spending and the vote share of the presidential candidate of the incumbent's party are related.	\vspace{.25cm}
 	\begin{enumerate}
-		\item Run a regression where the outcome variable is \texttt{presvote} and the explanatory variable is \texttt{difflog}.	\vspace{5cm}
-		\item Make a scatterplot of the two variables and add the regression line. 	\vspace{5cm}
-		\item Save the residuals of the model in a separate object.	\vspace{5cm}
+		\item Run a regression where the outcome variable is \texttt{presvote} and the explanatory variable is \texttt{difflog}.	\vspace{.5cm}
+		
+			\lstinputlisting[language=R, firstline=73, lastline=74]{PS03_answers_SN.R}  
+		\begin{footnotesize}
+			
+			\begin{verbatim}
+			Coefficients:
+			Estimate Std. Error t value Pr(>|t|)    
+			(Intercept)     0.507583   0.003161  160.60   <2e-16 ***
+			inc.sub$difflog 0.023837   0.001359   17.54   <2e-16 ***
+			---
+			Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+			
+			Residual standard error: 0.1104 on 3191 degrees of freedom
+			Multiple R-squared:  0.08795,	Adjusted R-squared:  0.08767 
+			F-statistic: 307.7 on 1 and 3191 DF,  p-value: < 2.2e-16
+				
+			\end{verbatim}
+		\end{footnotesize}
+		
+		\item Make a scatterplot of the two variables and add the regression line. 	\vspace{.5cm}
+		
+			\lstinputlisting[language=R, firstline=79, lastline=85]{PS03_answers_SN.R}  \vspace{.5cm}
+		
+		See Figure 2.
+		\begin{figure}[!h]]\centering
+			
+			\caption{\footnotesize Difference in Campaign Spending vs Presidential Vote.}
+			\label{fig:presvote_by_difflog}
+			\includegraphics[width=.85\textwidth]{presvote_by_difflog.pdf}
+		\end{figure}
+		
+		\item Save the residuals of the model in a separate object.	\vspace{.5cm}
+		
+			\lstinputlisting[language=R, firstline=90, lastline=90]{PS03_answers_SN.R}  \vspace{.5cm}
+		
 		\item Write the prediction equation.
+		$$
+			Y = 0.507 + 0.024X + 0.110
+		$$
 	\end{enumerate}
 	
 	\newpage	
@@ -107,11 +176,43 @@
 \noindent We are interested in knowing how the vote share of the presidential candidate of the incumbent's party is associated with the incumbent's electoral success.
 	\vspace{.25cm}
 	\begin{enumerate}
-		\item Run a regression where the outcome variable is \texttt{voteshare} and the explanatory variable is \texttt{presvote}.
-			\vspace{5cm}
-		\item Make a scatterplot of the two variables and add the regression line. 
-			\vspace{5cm}
+		\item Run a regression where the outcome variable is \texttt{voteshare} and the explanatory variable is \texttt{presvote}. \vspace{.5cm}
+			
+				\lstinputlisting[language=R, firstline=103, lastline=104]{PS03_answers_SN.R}  
+			\begin{footnotesize}
+				
+				\begin{verbatim}
+					Coefficients:
+					Estimate Std. Error t value Pr(>|t|)    
+					(Intercept)     0.579031   0.002251  257.19   <2e-16 ***
+					inc.sub$difflog 0.041666   0.000968   43.04   <2e-16 ***
+					---
+					Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+					
+					Residual standard error: 0.07867 on 3191 degrees of freedom
+					Multiple R-squared:  0.3673,	Adjusted R-squared:  0.3671 
+					F-statistic:  1853 on 1 and 3191 DF,  p-value: < 2.2e-16
+					
+				\end{verbatim}
+			\end{footnotesize}
+			
+		\item Make a scatterplot of the two variables and add the regression line. 	\vspace{.5cm}
+			
+				\lstinputlisting[language=R, firstline=109, lastline=116]{PS03_answers_SN.R}  \vspace{.5cm}
+			
+			See Figure 3.
+			
+				\begin{figure}[!h]]\centering
+				
+				\caption{\footnotesize Presidential Vote vs Incumbant Vote Share.}
+				\label{fig:voteshare_by_presvote}
+				\includegraphics[width=.85\textwidth]{voteshare_by_presvote.pdf}
+			\end{figure}
+			
 		\item Write the prediction equation.
+		$$
+					Y = 0.579 + 0.042X + 0.078
+		$$
 	\end{enumerate}
 	
 
@@ -119,9 +220,42 @@
 \section*{Question 4}
 \noindent The residuals from part (a) tell us how much of the variation in \texttt{voteshare} is $not$ explained by the difference in spending between incumbent and challenger. The residuals in part (b) tell us how much of the variation in \texttt{presvote} is $not$ explained by the difference in spending between incumbent and challenger in the district.
 	\begin{enumerate}
-		\item Run a regression where the outcome variable is the residuals from Question 1 and the explanatory variable is the residuals from Question 2.	\vspace{6cm}
-		\item Make a scatterplot of the two residuals and add the regression line. 	\vspace{6cm}
+		\item Run a regression where the outcome variable is the residuals from Question 1 and the explanatory variable is the residuals from Question 2.	\vspace{.5cm}
+		
+				\lstinputlisting[language=R, firstline=131, lastline=132]{PS03_answers_SN.R}  
+		\begin{footnotesize}
+			
+			\begin{verbatim}
+				Coefficients:
+				Estimate Std. Error t value Pr(>|t|)    
+				(Intercept)               -2.177e-18  1.299e-03    0.00        1    
+				pres_vote_model_residuals  2.569e-01  1.176e-02   21.84   <2e-16 ***
+				---
+				Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+				
+				Residual standard error: 0.07338 on 3191 degrees of freedom
+				Multiple R-squared:   0.13,	Adjusted R-squared:  0.1298 
+				F-statistic:   477 on 1 and 3191 DF,  p-value: < 2.2e-16
+				
+			\end{verbatim}
+		\end{footnotesize}
+		
+		\item Make a scatterplot of the two residuals and add the regression line. 	\vspace{.5cm}
+		
+			\lstinputlisting[language=R, firstline=135, lastline=142]{PS03_answers_SN.R}  
+			See Figure 4.
+			
+			\begin{figure}[!h]]\centering
+				
+				\caption{\footnotesize PresVote residuals vs Incumbant Vote Share residuals.}
+				\label{fig:presvote_residuals_by_vote_share_residuals}
+				\includegraphics[width=.85\textwidth]{presvote_residuals_by_vote_share_residuals.pdf}
+			\end{figure}
+		
 		\item Write the prediction equation.
+		$$
+				Y = 2.177 \times 10^{-18} + 0.257X + 0.073
+		$$
 	\end{enumerate}
 	
 	\newpage	
@@ -129,9 +263,48 @@
 \section*{Question 5}
 \noindent What if the incumbent's vote share is affected by both the president's popularity and the difference in spending between incumbent and challenger? 
 	\begin{enumerate}
-		\item Run a regression where the outcome variable is the incumbent's \texttt{voteshare} and the explanatory variables are \texttt{difflog} and \texttt{presvote}.	\vspace{5cm}
-		\item Write the prediction equation.	\vspace{5cm}
+		\item Run a regression where the outcome variable is the incumbent's \texttt{voteshare} and the explanatory variables are \texttt{difflog} and \texttt{presvote}.	\vspace{.5cm}
+		
+			\lstinputlisting[language=R, firstline=131, lastline=132]{PS03_answers_SN.R}  
+		\begin{footnotesize}
+			
+			\begin{verbatim}
+				Coefficients:
+				Estimate Std. Error t value Pr(>|t|)    
+				(Intercept)      0.4486442  0.0063297   70.88   <2e-16 ***
+				inc.sub$difflog  0.0355431  0.0009455   37.59   <2e-16 ***
+				inc.sub$presvote 0.2568770  0.0117637   21.84   <2e-16 ***
+				---
+				Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+				
+				Residual standard error: 0.07339 on 3190 degrees of freedom
+				Multiple R-squared:  0.4496,	Adjusted R-squared:  0.4493 
+				F-statistic:  1303 on 2 and 3190 DF,  p-value: < 2.2e-16
+				
+			\end{verbatim}
+		\end{footnotesize}
+		
+		\item Write the prediction equation.	\vspace{.5cm}
+			$$
+					Y = 0.449  + 0.355X_{1} + 0.257X_{2} + 0.073 
+			$$
 		\item What is it in this output that is identical to the output in Question 4? Why do you think this is the case?
+		
+		In  questions 4 and 5,  the standard error terms, $\epsilon$,  are equal.  This is a strong indicator that $X_{1}$, difflog,  and $X_{1}$, presvote, are uncorrelated.  
+		Since: 
+		 \begin{quote}
+			"The residuals from part (a) tell us how much of the variation in \texttt{voteshare} is $not$ explained by the difference in spending between incumbent and challenger. 
+			The residuals in part (b) tell us how much of the variation in \texttt{presvote} is $not$ explained by the difference in spending between incumbent and challenger in the district.
+		\end{quote}
+		The residuals from the regression of 
+		$Q1\_residuals \sim Q2\_residuals$ 
+		tells us 
+		\begin{quote}
+			How much of the variation in Y that $X_{1}$ didn't explain can be 'predicted' by the variation in Y that $X_{2}$ didn't explain?"
+			\end{quote}
+		 in this case, since the standard error terms are the same, we can expect that $X_{1}$ and $X_{2}$ are uncorrelated.
+		
+		
 	\end{enumerate}
 
 
